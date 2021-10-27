@@ -6,16 +6,16 @@ using Microsoft.Extensions.Options;
 
 namespace Autransoft.Template.EntityFramework.PostgreSQL.Lib.Data
 {
-    public class AutranSoftContext : DbContext, IAutranSoftContext
+    public class AutranSoftContext : DbContext, IAutranSoftEfContext
     {
-        private readonly IAutranSoftLogger<AutranSoftContext> _logger;
+        private readonly IAutranSoftEfLogger<AutranSoftContext> _logger;
         private readonly PosgreSQL _posgreSQL;
 
         public Func<PosgreSQL, string> GetConnectionString;
 
         public AutranSoftContext
         (
-            IAutranSoftLogger<AutranSoftContext> logger, 
+            IAutranSoftEfLogger<AutranSoftContext> logger, 
             IOptions<DTOs.Autransoft> autransoft
         ) 
         {
@@ -25,7 +25,7 @@ namespace Autransoft.Template.EntityFramework.PostgreSQL.Lib.Data
 
         public AutranSoftContext
         (
-            IAutranSoftLogger<AutranSoftContext> logger, 
+            IAutranSoftEfLogger<AutranSoftContext> logger, 
             IOptions<DTOs.Autransoft> autransoft, 
             Func<PosgreSQL, string> getConnectionString
         )
@@ -46,7 +46,7 @@ namespace Autransoft.Template.EntityFramework.PostgreSQL.Lib.Data
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Message={ex.Message}");
+                    //_logger.LogError(ex);
                 }
             }
         }
@@ -61,8 +61,5 @@ namespace Autransoft.Template.EntityFramework.PostgreSQL.Lib.Data
                 builder.ApplyConfigurationsFromAssembly(assembly);
             }
         }
-
-        //private string GetConnectionString() =>
-        //    $"Server={_posgreSQL?.EndPoint};Database={_posgreSQL?.DataBaseName};Uid={_posgreSQL?.User};Pwd={_posgreSQL?.Pass}";
     }
 }
