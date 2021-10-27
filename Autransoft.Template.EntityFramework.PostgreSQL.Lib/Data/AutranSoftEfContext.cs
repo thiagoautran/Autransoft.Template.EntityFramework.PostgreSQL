@@ -7,16 +7,16 @@ using Microsoft.Extensions.Options;
 
 namespace Autransoft.Template.EntityFramework.PostgreSQL.Lib.Data
 {
-    public class AutranSoftContext : DbContext, IAutranSoftEfContext
+    public class AutranSoftEfContext : DbContext, IAutranSoftEfContext
     {
-        private readonly IAutranSoftEfLogger<AutranSoftContext> _logger;
+        private readonly IAutranSoftEfLogger<AutranSoftEfContext> _logger;
         private readonly PosgreSQL _posgreSQL;
 
         public Func<PosgreSQL, string> GetConnectionString;
 
-        public AutranSoftContext
+        public AutranSoftEfContext
         (
-            IAutranSoftEfLogger<AutranSoftContext> logger, 
+            IAutranSoftEfLogger<AutranSoftEfContext> logger, 
             IOptions<DTOs.Autransoft> autransoft
         ) 
         {
@@ -24,9 +24,9 @@ namespace Autransoft.Template.EntityFramework.PostgreSQL.Lib.Data
             _logger = logger;
         } 
 
-        public AutranSoftContext
+        public AutranSoftEfContext
         (
-            IAutranSoftEfLogger<AutranSoftContext> logger, 
+            IAutranSoftEfLogger<AutranSoftEfContext> logger, 
             IOptions<DTOs.Autransoft> autransoft, 
             Func<PosgreSQL, string> getConnectionString
         )
