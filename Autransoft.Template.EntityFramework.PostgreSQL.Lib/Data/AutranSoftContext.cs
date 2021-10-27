@@ -1,4 +1,5 @@
 using System;
+using Autransoft.Template.EntityFramework.Lib.Exceptions;
 using Autransoft.Template.EntityFramework.Lib.Interfaces;
 using Autransoft.Template.EntityFramework.PostgreSQL.Lib.DTOs;
 using Microsoft.EntityFrameworkCore;
@@ -46,7 +47,7 @@ namespace Autransoft.Template.EntityFramework.PostgreSQL.Lib.Data
                 }
                 catch (Exception ex)
                 {
-                    //_logger.LogError(ex);
+                    _logger.LogError(new AutranSoftEfException(ex));
                 }
             }
         }
