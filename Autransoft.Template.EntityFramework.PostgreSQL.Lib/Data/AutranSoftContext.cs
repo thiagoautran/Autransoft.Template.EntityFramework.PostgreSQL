@@ -1,6 +1,6 @@
 using System;
+using Autransoft.Template.EntityFramework.Lib.Interfaces;
 using Autransoft.Template.EntityFramework.PostgreSQL.Lib.DTOs;
-using Autransoft.Template.EntityFramework.PostgreSQL.Lib.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -8,23 +8,45 @@ namespace Autransoft.Template.EntityFramework.PostgreSQL.Lib.Data
 {
     public class AutranSoftContext : DbContext, IAutranSoftContext
     {
+        private readonly IAutranSoftLogger<AutranSoftContext> _logger;
         private readonly PosgreSQL _posgreSQL;
 
-        public AutranSoftContext(IOptions<Autransoft.Template.EntityFramework.PostgreSQL.Lib.DTOs.Autransoft> autransoftAppSettings) => _posgreSQL = autransoftAppSettings?.Value?.Database?.PosgreSQL;
+        public Func<PosgreSQL, string> GetConnectionString;
+
+        public AutranSoftContext
+        (
+            IAutranSoftLogger<AutranSoftContext> logger, 
+            IOptions<DTOs.Autransoft> autransoft
+        ) 
+        {
+            _posgreSQL = autransoft?.Value?.Database?.PosgreSQL;
+            _logger = logger;
+        } 
+
+        public AutranSoftContext
+        (
+            IAutranSoftLogger<AutranSoftContext> logger, 
+            IOptions<DTOs.Autransoft> autransoft, 
+            Func<PosgreSQL, string> getConnectionString
+        )
+        {
+            _posgreSQL = autransoft?.Value?.Database?.PosgreSQL;
+            _logger = logger;
+            
+            GetConnectionString = getConnectionString;
+        } 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var connectionString = !string.IsNullOrEmpty(_posgreSQL.LocalConnectionString) ? _posgreSQL.LocalConnectionString : GetConnectionString();
-
                 try
                 {
-                    optionsBuilder.UseNpgsql(connectionString);
+                    optionsBuilder.UseNpgsql(GetConnectionString(_posgreSQL));
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
-                    Console.WriteLine($"Message={ex.Message}|ConnectionString={connectionString}");
+                    Console.WriteLine($"Message={ex.Message}");
                 }
             }
         }
@@ -33,14 +55,14 @@ namespace Autransoft.Template.EntityFramework.PostgreSQL.Lib.Data
         {
             base.OnModelCreating(builder);
 
-            foreach(var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 Console.WriteLine(assembly.FullName);
                 builder.ApplyConfigurationsFromAssembly(assembly);
             }
         }
 
-        private string GetConnectionString() =>
-            $"Server={_posgreSQL?.EndPoint};Database={_posgreSQL?.DataBaseName};Uid={_posgreSQL?.User};Pwd={_posgreSQL?.Pass}";
+        //private string GetConnectionString() =>
+        //    $"Server={_posgreSQL?.EndPoint};Database={_posgreSQL?.DataBaseName};Uid={_posgreSQL?.User};Pwd={_posgreSQL?.Pass}";
     }
 }
