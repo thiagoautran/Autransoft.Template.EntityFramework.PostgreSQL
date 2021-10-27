@@ -1,1 +1,1 @@
-# Autransoft.Template.EntityFramework.PostgreSQL
+# Autransoft.Template.EntityFramework
