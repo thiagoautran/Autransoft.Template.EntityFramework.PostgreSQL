@@ -22,6 +22,11 @@ namespace Autransoft.Template.EntityFramework.PostgreSQL.Lib.Data
         {
             _posgreSQL = autransoft?.Value?.Database?.PosgreSQL;
             _logger = logger;
+
+            GetConnectionString = (PosgreSQL posgreSQL) => 
+            {
+                return $"host={posgreSQL?.Host};port={posgreSQL?.Port};database={posgreSQL?.Database};username={posgreSQL?.Username};password={posgreSQL?.Password}";
+            };
         } 
 
         public AutranSoftEfContext
