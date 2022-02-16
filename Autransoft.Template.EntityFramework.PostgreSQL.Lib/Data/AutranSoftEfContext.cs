@@ -27,7 +27,7 @@ namespace Autransoft.Template.EntityFramework.PostgreSQL.Lib.Data
             {
                 return $"host={posgreSQL?.Host};port={posgreSQL?.Port};database={posgreSQL?.Database};username={posgreSQL?.Username};password={posgreSQL?.Password}";
             };
-        } 
+        }
 
         public AutranSoftEfContext
         (
@@ -63,7 +63,6 @@ namespace Autransoft.Template.EntityFramework.PostgreSQL.Lib.Data
 
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                Console.WriteLine(assembly.FullName);
                 builder.ApplyConfigurationsFromAssembly(assembly);
             }
         }
